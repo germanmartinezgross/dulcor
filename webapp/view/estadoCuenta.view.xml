@@ -1,0 +1,66 @@
+<mvc:View controllerName="estadoCuenta.dulcor.controller.estadoCuenta" xmlns:mvc="sap.ui.core.mvc" displayBlock="true"
+    xmlns="sap.m" xmlns:form="sap.ui.layout.form" xmlns:sform="sap.ui.comp.smartform" xmlns:sf="sap.ui.comp.smartfield">
+    <Page id="page" title="{i18n>title}">
+        <Panel class="sapUiResponsiveMargin" width="auto">
+            <form:SimpleForm columnsM="2" columnsL="3" columnsXL="6" layout="ColumnLayout">
+                <Label text="Cliente" />
+                <!-- <sf:SmartField id="idDeliveryTransport" value="{DeliveryTransport}" textInEditModeSource="ValueListNoValidation">
+                    <sf:configuration>
+                        <sf:Configuration displayBehaviour="idAndDescription" />
+                    </sf:configuration>
+                </sf:SmartField> -->
+                <Input placeholder="" value="123456789" editable="false" />
+            </form:SimpleForm>
+            <form:SimpleForm columnsM="2" columnsL="3" columnsXL="6" layout="ColumnLayout">
+                <form:content>
+                    <Label text="Empresa" />
+                    <Input placeholder="" width="auto" />
+
+                    <Label text="Fecha Desde" />
+                    <DatePicker id="DP1" placeholder="Fecha" change="handleChange" class="sapUiSmallMarginBottom"
+                        showFooter="true" width="auto" />
+
+                    <Label text="Fecha Hasta" />
+                    <DatePicker id="DP2" placeholder="Fecha" change="handleChange" class="sapUiSmallMarginBottom"
+                        width="auto" />
+
+                    <Button text="Buscar" press=".onSubmit" />
+                </form:content>
+            </form:SimpleForm>
+        </Panel>
+        <Panel class="sapUiResponsiveMargin" width="auto" id="tablaPanel" visible="false">
+            <Table id="productsTable" items="{documentosFinancieros>/estados}" headerText="Estado de Cuenta" alternateRowColors="true">
+                <headerToolbar>
+                    <OverflowToolbar id="idCrumbToolbar" >
+                        <VBox >
+                        <Title text= "Estado de Cuenta"/>						
+                        </VBox>
+					</OverflowToolbar>
+                </headerToolbar>
+                <infoToolbar>
+					<OverflowToolbar>
+						<Text text= "Saldo : ${documentosFinancieros>/saldo}" />
+					</OverflowToolbar>
+				</infoToolbar>
+                <columns>
+                    <Column id="operacionCol"><Text text="Operacion" /></Column>
+                    <Column id="comprobanteCol" demandPopin="true"><Text text="Nro. Comprobante" /></Column>
+                    <Column id="fechaCol" demandPopin="true"><Text text="Fecha" /></Column>
+                    <Column id="vencimientoCol" demandPopin="true"><Text text="Vencimiento" /></Column>
+                    <Column id="importeCol" demandPopin="true"><Text text="Importe" /></Column>
+                </columns>
+                <items>
+                    <ColumnListItem type="Navigation" vAlign="Middle" press="onPress">
+                        <cells>
+                            <Text text="{documentosFinancieros>operacion}" />
+                            <Text text="{documentosFinancieros>comprobante}" />
+                            <Text text="{documentosFinancieros>fecha}" />
+                            <Text text="{documentosFinancieros>vencimiento}" />
+                            <Text text="{documentosFinancieros>moneda} {documentosFinancieros>importe}" />
+                        </cells>
+                    </ColumnListItem>
+                </items>
+            </Table>
+        </Panel>
+    </Page>
+</mvc:View>

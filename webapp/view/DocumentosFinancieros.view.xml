@@ -1,0 +1,83 @@
+<mvc:View controllerName="estadoCuenta.dulcor.controller.DocumentosFinancieros" xmlns:mvc="sap.ui.core.mvc"
+    displayBlock="true" xmlns="sap.m"  xmlns:semantic="sap.f.semantic" xmlns:form="sap.ui.layout.form" xmlns:sform="sap.ui.comp.smartform" 
+    xmlns:l="sap.ui.layout" xmlns:sf="sap.ui.comp.smartfield">
+    <Page id="page" title="{i18n>title}">
+        <Panel class="sapUiResponsiveMargin" width="auto">
+            <semantic:SemanticPage id="page2" busy="{detailView>/busy}" busyIndicatorDelay="{detailView>/delay}">
+                <semantic:titleHeading>
+                    <!-- <Title text="Nota de crédito N° 0063A00085422" /> -->
+                    <Title text="{datosPrincipales>/operacion} N° {datosPrincipales>/comprobante}" />
+                    <!-- <Text text=""/>  -->
+                </semantic:titleHeading>
+                <semantic:headerContent>
+                    <HBox>
+                        <VBox class="sapUiResponsiveMargin">
+                            <Label text="Operacion" labelFor="operacion" />
+                            <Text id="operacion" text="{datosPrincipales>/operacion}" />
+                        </VBox>
+                        <VBox class="sapUiResponsiveMargin">
+                            <Label text="Fecha" labelFor="fecha" />
+                            <Text id="fecha" text="{datosPrincipales>/fecha}" />
+                        </VBox>
+                        <VBox class="sapUiResponsiveMargin">
+                            <Label text="Vencimiento" labelFor="vencimiento" />
+                            <Text id="vencimiento" text="{datosPrincipales>/vencimiento}" />
+                        </VBox>
+                        <VBox class="sapUiResponsiveMargin">
+                            <Label text="Importe" labelFor="importe" />
+                            <Text id="importe" text="{datosPrincipales>/moneda} {datosPrincipales>/importe}" />
+                        </VBox>
+
+                    </HBox>
+                    <FlexBox alignItems="Center" justifyContent="End">
+                        <Button icon="sap-icon://pdf-attachment" text="Exportar Factura en PDF" />
+                    </FlexBox>
+                </semantic:headerContent>
+                <semantic:content>
+                    <Table id="productsTable" items="{productos>/productos}" headerText="Items"
+                        alternateRowColors="true">
+                        <columns>
+                            <Column id="operacionCol"><Text text="Producto" /></Column>
+                            <Column id="comprobanteCol" demandPopin="true"><Text text="Cantidad" /></Column>
+                        </columns>
+                        <items>
+                            <ColumnListItem type="Inactive" vAlign="Middle" press="onPress">
+                                <cells>
+                                    <Text text="{productos>producto}" />
+                                    <Text text="{productos>cantidad}" />
+                                </cells>
+                            </ColumnListItem>
+                        </items>
+                    </Table>
+                </semantic:content>
+            </semantic:SemanticPage>
+        </Panel>
+        <Panel class="sapUiResponsiveMargin" width="auto" id="tablaPanel">
+            <Table id="productsTable2" items="{comprobantes>/comprobantes}" headerText="Comprobantes Asociados"
+                alternateRowColors="true">
+                <columns>
+                    <Column id="tipoCol"><Text text="Tipo" /></Column>
+                    <Column id="numeroCol" demandPopin="true"><Text text="Numero" /></Column>
+                    <Column id="fechaCol" demandPopin="true"><Text text="Fecha" /></Column>
+                    <Column id="vencimientoCol" demandPopin="true"><Text text="Vencimiento" /></Column>
+                    <Column id="entregaCol" demandPopin="true"><Text text="Entrega" /></Column>
+                    <Column id="itemsCol" demandPopin="true"><Text text="Items" /></Column>
+                    <Column id="descripcionCol" demandPopin="true"><Text text="Descripcion" /></Column>
+                </columns>
+                <items>
+                    <ColumnListItem type="Active" vAlign="Middle" press="onPress">
+                        <cells>
+                            <Text text="{comprobantes>tipo}" />
+                            <Text text="{comprobantes>numero}" />
+                            <Text text="{comprobantes>fecha}" />
+                            <Text text="{comprobantes>vencimiento}" />
+                            <Text text="{comprobantes>entrega}" />
+                            <Text text="{comprobantes>items}" />
+                            <Text text="{comprobantes>descripcion}" />
+                        </cells>
+                    </ColumnListItem>
+                </items>
+            </Table>
+        </Panel>
+    </Page>
+</mvc:View>
