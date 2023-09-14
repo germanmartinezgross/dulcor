@@ -24,6 +24,15 @@
           "localUri": "localService/metadata.xml",
           "odataVersion": "2.0"
         }
+      },
+      "estadoService": {
+        "uri": "/sap/opu/odata/sap/Z_FI0010_ESTADO_CUENTA/",
+        "type": "OData",
+        "settings": {
+          "annotations": [],
+          "localUri": "localService/metadata.xml",
+          "odataVersion": "2.0"
+        }
       }
     }
   },
@@ -69,19 +78,27 @@
           "bundleName": "estadoCuenta.dulcor.i18n.i18n"
         }
       },
-      "usuarios": {
+      "usuariosData": {
         "dataSource": "mainService",
         "preload": true,
         "settings": {}
       },
+      "estadoCuenta": {
+        "dataSource": "estadoService",
+        "preload": true,
+        "settings": {}
+      },
       "DocumentosFinancieros": {
-        "type": "json"
+        "type": "sap.ui.model.json.JSONModel"
       },
       "Productos": {
-        "type": "json"
+        "type": "sap.ui.model.json.JSONModel"
       },
       "Comprobantes": {
-        "type": "json"
+        "type": "sap.ui.model.json.JSONModel"
+      },
+      "empresasCollection":{
+        "type": "sap.ui.model.json.JSONModel"
       }
     },
     "resources": {
@@ -96,17 +113,17 @@
         "routerClass": "sap.m.routing.Router",
         "viewType": "XML",
         "async": true,
-        "viewPath": "protech.estadocuenta.view",
+        "viewPath": "estadoCuenta.dulcor.view",
         "controlAggregation": "pages",
         "controlId": "app",
         "clearControlAggregation": false
       },
       "routes": [
         {
-          "name": "RouteFiltros",
+          "name": "RouteEstado",
           "pattern": ":?query:",
           "target": [
-            "TargetFiltros"
+            "TargetEstado"
           ]
         },
         {
@@ -125,12 +142,12 @@
         }
       ],
       "targets": {
-        "TargetFiltros": {
+        "TargetEstado": {
           "viewType": "XML",
           "transition": "slide",
           "clearControlAggregation": false,
-          "viewId": "Filtros",
-          "viewName": "Filtros"
+          "viewId": "estadoCuenta",
+          "viewName": "estadoCuenta"
         },
         "TargetDocF": {
           "viewType": "XML",
@@ -149,7 +166,7 @@
       }
     },
     "rootView": {
-      "viewName": "protech.estadocuenta.view.App",
+      "viewName": "estadoCuenta.dulcor.view.App",
       "type": "XML",
       "async": true,
       "id": "App"

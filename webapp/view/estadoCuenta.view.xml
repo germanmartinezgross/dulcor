@@ -1,21 +1,79 @@
 <mvc:View controllerName="estadoCuenta.dulcor.controller.estadoCuenta" xmlns:mvc="sap.ui.core.mvc" displayBlock="true"
-    xmlns="sap.m" xmlns:form="sap.ui.layout.form" xmlns:sform="sap.ui.comp.smartform" xmlns:sf="sap.ui.comp.smartfield">
+    xmlns="sap.m" xmlns:form="sap.ui.layout.form" xmlns:sform="sap.ui.comp.smartform" xmlns:sf="sap.ui.comp.smartfield"
+    xmlns:core="sap.ui.core">
     <Page id="page" title="{i18n>title}">
         <Panel class="sapUiResponsiveMargin" width="auto">
-            <form:SimpleForm columnsM="2" columnsL="3" columnsXL="6" layout="ColumnLayout">
-                <Label text="Cliente" />
-                <!-- <sf:SmartField id="idDeliveryTransport" value="{DeliveryTransport}" textInEditModeSource="ValueListNoValidation">
-                    <sf:configuration>
-                        <sf:Configuration displayBehaviour="idAndDescription" />
-                    </sf:configuration>
-                </sf:SmartField> -->
-                <Input placeholder="" value="123456789" editable="false" />
-            </form:SimpleForm>
+            <!-- <form:SimpleForm columnsM="2" columnsL="3" columnsXL="6" layout="ColumnLayout"> -->
+            <!-- <Label text="Cliente" /> -->
+            <!-- <Input placeholder="" value="123456789" editable="false" /> -->
+            <!-- <sf:SmartField labelFor="idPrice"/> -->
+            <!-- <sf:SmartField value="{btpUser}" id="idPrice"/> -->
+            <!-- </form:SimpleForm>  -->
+
+
+            <sform:SmartForm id="form" editable="true" binding="{/usuPortal('fabian.robins@dulcor.com.ar')}">
+                <sform:layout>
+                    <sform:ColumnLayout columnsM="2" columnsL="3" columnsXL="4" />
+                </sform:layout>
+                <sform:Group>
+                    <sform:GroupElement>
+                        <sf:SmartField id="Customer" value="{Customer}" textLabel="Cliente">
+                            <sf:configuration>
+                                <sf:Configuration displayBehaviour="idAndDescription" />
+                            </sf:configuration>
+                        </sf:SmartField>
+                    </sform:GroupElement>
+                </sform:Group>
+            </sform:SmartForm>
+
+            <!-- <sform:SmartForm id="form2" editable="true" binding="{/usuPortal('fabian.robins@dulcor.com.ar')}">
+                <sform:layout>
+                    <sform:ColumnLayout columnsM="2" columnsL="3" columnsXL="4" />
+                </sform:layout>
+                <sform:Group>
+                    <sform:GroupElement>
+
+                        <sf:SmartField id="Customer2" value="{Customer}" textLabel="Cliente">
+                            <sf:configuration>
+                                <sf:Configuration displayBehaviour="idAndDescription" />
+                            </sf:configuration>
+                        </sf:SmartField>
+
+                    </sform:GroupElement>
+
+                    <sform:GroupElement>
+                        <sf:SmartField id="Customer3" value="{Customer}" textLabel="Cliente2">
+                            <sf:configuration>
+                                <sf:Configuration displayBehaviour="idAndDescription" />
+                            </sf:configuration>
+                        </sf:SmartField>
+                    </sform:GroupElement>
+
+                    <sform:GroupElement>
+                        <sf:SmartField id="Customer4" value="{Customer}" textLabel="Cliente3">
+                            <sf:configuration>
+                                <sf:Configuration displayBehaviour="idAndDescription" />
+                            </sf:configuration>
+                        </sf:SmartField>
+                        <Button text="Buscar" press=".onSubmit" />
+                    </sform:GroupElement>
+                </sform:Group>
+
+            </sform:SmartForm> -->
+
+
+
             <form:SimpleForm columnsM="2" columnsL="3" columnsXL="6" layout="ColumnLayout">
                 <form:content>
                     <Label text="Empresa" />
-                    <Input placeholder="" width="auto" />
-
+                    <!-- <Input placeholder="" width="auto" /> -->
+                     <!-- <ComboBox showSecondaryValues="true" items="{path: 'empresasCollection>/to_SalesOrganization',  sorter: { path: 'SalesOrganization_Text' }}">
+                        <core:ListItem key="{empresasCollection>SalesOrganization}" text="{empresasCollection>SalesOrganization_Text}" additionalText="{empresasCollection>SalesOrganization}" />
+                    </ComboBox>  -->
+                    <ComboBox	id="centro" showSecondaryValues="true" items= "{empresasCollection>/}" >
+                    <!-- change="handleChange" selectionChange = "handleCentro" placeholder = "Centro"> -->
+						<core:ListItem id="_IDGenListItem1"	key="{empresasCollection>SalesOrganization}" text="{empresasCollection>SalesOrganization_Text}" additionalText="{empresasCollection>SalesOrganization}" />
+					</ComboBox>
                     <Label text="Fecha Desde" />
                     <DatePicker id="DP1" placeholder="Fecha" change="handleChange" class="sapUiSmallMarginBottom"
                         showFooter="true" width="auto" />
@@ -29,19 +87,20 @@
             </form:SimpleForm>
         </Panel>
         <Panel class="sapUiResponsiveMargin" width="auto" id="tablaPanel" visible="false">
-            <Table id="productsTable" items="{documentosFinancieros>/estados}" headerText="Estado de Cuenta" alternateRowColors="true">
+            <Table id="productsTable" items="{DocumentosFinancieros>/estados}" headerText="Estado de Cuenta"
+                alternateRowColors="true">
                 <headerToolbar>
-                    <OverflowToolbar id="idCrumbToolbar" >
-                        <VBox >
-                        <Title text= "Estado de Cuenta"/>						
+                    <OverflowToolbar id="idCrumbToolbar">
+                        <VBox>
+                            <Title text="Estado de Cuenta" />
                         </VBox>
-					</OverflowToolbar>
+                    </OverflowToolbar>
                 </headerToolbar>
                 <infoToolbar>
-					<OverflowToolbar>
-						<Text text= "Saldo : ${documentosFinancieros>/saldo}" />
-					</OverflowToolbar>
-				</infoToolbar>
+                    <OverflowToolbar>
+                        <Text text="Saldo : ${documentosFinancieros>/saldo}" />
+                    </OverflowToolbar>
+                </infoToolbar>
                 <columns>
                     <Column id="operacionCol"><Text text="Operacion" /></Column>
                     <Column id="comprobanteCol" demandPopin="true"><Text text="Nro. Comprobante" /></Column>
@@ -52,11 +111,11 @@
                 <items>
                     <ColumnListItem type="Navigation" vAlign="Middle" press="onPress">
                         <cells>
-                            <Text text="{documentosFinancieros>operacion}" />
-                            <Text text="{documentosFinancieros>comprobante}" />
-                            <Text text="{documentosFinancieros>fecha}" />
-                            <Text text="{documentosFinancieros>vencimiento}" />
-                            <Text text="{documentosFinancieros>moneda} {documentosFinancieros>importe}" />
+                            <Text text="{DocumentosFinancieros>operacion}" />
+                            <Text text="{DocumentosFinancieros>comprobante}" />
+                            <Text text="{DocumentosFinancieros>fecha}" />
+                            <Text text="{DocumentosFinancieros>vencimiento}" />
+                            <Text text="{DocumentosFinancieros>moneda} {DocumentosFinancieros>importe}" />
                         </cells>
                     </ColumnListItem>
                 </items>
