@@ -5,7 +5,7 @@
         <Panel class="sapUiResponsiveMargin" width="auto">
             <form:SimpleForm columnsM="2" columnsL="3" columnsXL="6" layout="ColumnLayout">
                 <Label text="Cliente" />
-                <Input id= "clientName" value="{PortalModel>/clientName}" showValueHelp="true" valueHelpOnly="true"
+                <Input id="clientName" value="{PortalModel>/clientName}" showValueHelp="true" valueHelpOnly="true"
                     valueHelpRequest="onValueHelpRequest" enabled="{PortalModel>/clientEnabled}" />
             </form:SimpleForm>
 
@@ -57,9 +57,29 @@
                         <cells>
                             <Text text="{DocumentosFinancieros>DocType}" />
                             <Text text="{DocumentosFinancieros>DocNo}" />
-                            <Text text="{DocumentosFinancieros>PstngDate}" />
-                            <Text text="{DocumentosFinancieros>BlineDate}" />
-                            <Text text="{DocumentosFinancieros>Currency} {DocumentosFinancieros>Amount}" />
+                            <Text text="{ path:'DocumentosFinancieros>PstngDate',
+						                  type:'sap.ui.model.type.Date',
+						                  formatOptions: {  style: 'short',
+							                                strictParsing: true
+						                                }}" 
+                            />
+                            <Text text="{ path:'DocumentosFinancieros>BlineDate',
+						                  type:'sap.ui.model.type.Date',
+						                  formatOptions: {  style: 'short',
+							                                strictParsing: true
+						                                }}" 
+                            />
+                            <!-- <Text text="{DocumentosFinancieros>BlineDate}" /> -->
+
+                            <ObjectNumber
+							number="{
+								parts:[{path:'DocumentosFinancieros>Amount'},{path:'DocumentosFinancieros>Currency'}],
+								type: 'sap.ui.model.type.Currency',
+								formatOptions: {showMeasure: false}
+							}"
+							unit="{DocumentosFinancieros>Currency}" />
+
+                            <!-- <Text text="{DocumentosFinancieros>Currency} {DocumentosFinancieros>Amount}" /> -->
                         </cells>
                     </ColumnListItem>
                 </items>
