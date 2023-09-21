@@ -12,8 +12,12 @@
             <form:SimpleForm columnsM="2" columnsL="3" columnsXL="6" layout="ColumnLayout">
                 <form:content>
                     <Label text="Empresa" />
-                    <ComboBox id="idCBoxEmpresa" items="{EmpresaModel>/results}"
-                        selectedKey="{ToolsModel>/sKeyEmpresaDist}" placeholder="Seleccionar Empresa">
+                    <ComboBox id="idCBoxEmpresa" 
+                        selectedKey="{ToolsModel>/sKeyEmpresaDist}" placeholder="Seleccionar Empresa"
+                        items="{
+							path: 'EmpresaModel>/results',
+							sorter: { path: 'EmpresaModel>SalesOrganization' }
+						}">
                         <core:Item
                             key="{EmpresaModel>SalesOrganization}-{EmpresaModel>DistributionChanel}-{EmpresaModel>PriceList}"
                             text="{EmpresaModel>SalesOrganization} - {EmpresaModel>SalesOrganizationName}" />
@@ -42,7 +46,14 @@
                 </headerToolbar>
                 <infoToolbar>
                     <OverflowToolbar>
-                        <Text text="Saldo : ${Saldo>/TotalBal}  ." />
+                    <Text text="Saldo: "></Text>
+                    <ObjectNumber
+							number="{
+								parts:[{path:'Saldo>/TotalBal'},{path:'Saldo>/Currency'}],
+								type: 'sap.ui.model.type.Currency',
+								formatOptions: {showMeasure: false}
+							}"
+							unit="{Saldo>/Currency}" />
                     </OverflowToolbar>
                 </infoToolbar>
                 <columns>

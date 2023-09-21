@@ -46,9 +46,12 @@ sap.ui.define([
 
                 //LLAMAR CustomerOganizationType
                 let oEmpresa = await this.readServiceEmp(oPortal.getProperty("/to_Customer/Customer"));
+                
                 this.getOwnerComponent().setModel(new JSONModel(oEmpresa), "EmpresaModel");
 
-                // this.getView().setModel(this.getOwnerComponent().getModel("usuariosData"));
+                // oEmpresa = this.getOwnerComponent().getModel("EmpresaModel").getData().results.sort((a,b) => (a.SalesOrganization > b.SalesOrganization) ? 1 : ((b.SalesOrganization > a.SalesOrganization) ? -1 : 0))
+
+                // this.getOwnerComponent().setModel(new JSONModel(oEmpresa), "EmpresaModel");
 
                 var oModel = new JSONModel
                 var oModel2 = new JSONModel
