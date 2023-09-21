@@ -1,0 +1,25 @@
+<core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core">
+    <TableSelectDialog id="myDialog" contentWidth="550px" contentHeight="300px" noDataText="No hay Clientes"
+         title="Seleccione el Cliente" liveChange="onSearchClient" confirm=".handleCloseProveedor" cancel=".handleCloseProveedor" items="{
+			path : 'ClientModel>/results'
+		}" class="sapUiSizeCompact">
+        <ColumnListItem vAlign="Middle">
+            <cells>
+                <ObjectIdentifier title="{ClientModel>Customer}" />
+                <Text text="{ClientModel>CustomerFullName}" />
+            </cells>
+        </ColumnListItem>
+        <columns>
+            <Column width="6rem">
+                <header>
+                    <Text text="Cliente" />
+                </header>
+            </Column>
+            <Column minScreenWidth="Tablet" demandPopin="true">
+                <header>
+                    <Text text="Nombre" />
+                </header>
+            </Column>
+        </columns>
+    </TableSelectDialog>
+</core:FragmentDefinition>

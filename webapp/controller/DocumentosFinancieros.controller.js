@@ -23,16 +23,16 @@ sap.ui.define([
         oView = this.getView();
         operacion = oArgs.operacion;
         comprobante = oArgs.comprobante;
-        var docFin = this.getOwnerComponent().getModel("DocumentosFinancieros").getData().estados;
-        docFin = docFin.filter((doc) => doc.comprobante === comprobante && doc.operacion === operacion);
+        var docFin = this.getOwnerComponent().getModel("DocumentosFinancieros").getData().results;
+        docFin = docFin.filter((doc) => doc.DocNo === comprobante && doc.DocType === operacion);
         docFin.forEach(doc => {
           var oViewModel = new JSONModel({
-            comprobante: doc.comprobante,
-            operacion: doc.operacion,
-            fecha: doc.fecha,
-            vencimiento: doc.vencimiento,
-            importe: doc.importe,
-            moneda: doc.moneda
+            comprobante: doc.DocNo,
+            operacion: doc.DocType,
+            fecha: doc.PstngDate,
+            vencimiento: doc.BlineDate,
+            importe: doc.Amount,
+            moneda: doc.Currency
 
           });
           this.getView().setModel(oViewModel, "datosPrincipales");

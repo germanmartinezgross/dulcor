@@ -26,7 +26,7 @@
         }
       },
       "estadoService": {
-        "uri": "/sap/opu/odata/sap/Z_FI0010_ESTADO_CUENTA/",
+        "uri": "/sap/opu/odata/sap/Z_FI0010_ESTADO_CUENTA_SRV/",
         "type": "OData",
         "settings": {
           "annotations": [],
@@ -89,6 +89,9 @@
         "settings": {}
       },
       "DocumentosFinancieros": {
+        "type": "sap.ui.model.json.JSONModel"
+      },
+      "Saldo": {
         "type": "sap.ui.model.json.JSONModel"
       },
       "Productos": {

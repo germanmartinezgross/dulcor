@@ -53,7 +53,7 @@
             </semantic:SemanticPage>
         </Panel>
         <Panel class="sapUiResponsiveMargin" width="auto" id="tablaPanel">
-            <Table id="productsTable2" items="{DocumentosFinancieros>/estados}" headerText="Comprobantes Asociados"
+            <Table id="productsTable2" items="{DocumentosFinancieros>/estados}" headerText="Documentos Asociados"
                 alternateRowColors="true">
                 <columns>
                     <Column id="tipoCol"><Text text="Tipo" /></Column>
