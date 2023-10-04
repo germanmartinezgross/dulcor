@@ -13,37 +13,37 @@ sap.ui.define([
         return Controller.extend("estadoCuenta.dulcor.controller.Comprobantes", {
             onInit: function () {
                 var oRouter = this.getOwnerComponent().getRouter();
-                oRouter.getRoute("RouteComp").attachMatched(this._onRouteMatched, this);        
+                oRouter.getRoute("RouteComp").attachMatched(this._onRouteMatched, this);
             },
 
             _onRouteMatched: function (oEvent) {
                 var oArgs, oView;
-        
+
                 oArgs = oEvent.getParameter("arguments");
                 oView = this.getView();
                 tipo = oArgs.tipo;
                 numero = oArgs.numero;
-                var docFin = this.getOwnerComponent().getModel("Comprobantes").getData().comprobantes;
-                docFin = docFin.filter((doc) => doc.tipo === tipo && doc.numero === numero);
+                var docFin = this.getOwnerComponent().getModel("comprobantes").getData().results;
+                docFin = docFin.filter((doc) => doc.VbtypText === tipo && doc.Vbelv === numero);
                 docFin.forEach(doc => {
-                  var oViewModel = new JSONModel({
-                    tipo : doc.tipo,
-                    numero: doc.numero ,
-                    fecha: doc.fecha,
-                    estado: "entregar parcialmente",
-                    observaciones: "",
-                    items: doc.items,
-                    descripcion: doc.descripcion,        
-                  });
-                  this.getView().setModel(oViewModel, "datosPrincipales");
-        
+                    var oViewModel = new JSONModel({
+                        tipo: doc.VbtypText,
+                        numero: doc.Vbelv,
+                        fecha: doc.Erdat,
+                        estado: "entregar parcialmente",
+                        observaciones: "",
+                        items: doc.CantItems
+                        // descripcion: doc.descripcion,
+                    });
+                    this.getView().setModel(oViewModel, "datosPrincipales");
+
                 });
-        
-                this.getView().setModel(this.getOwnerComponent().getModel("Productos"), "productos");
-                this.getView().setModel(this.getOwnerComponent().getModel("DocumentosFinancieros"), "DocumentosFinancieros");
-        
-        
-              },
+
+                // this.getView().setModel(this.getOwnerComponent().getModel("Productos"), "productos");
+                // this.getView().setModel(this.getOwnerComponent().getModel("DocumentosFinancieros"), "DocumentosFinancieros");
+
+
+            },
 
             onSubmit: async function () {
                 this.getView().byId("tablaPanel").setVisible(true);

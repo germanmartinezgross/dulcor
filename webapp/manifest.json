@@ -1,178 +1,187 @@
 {
-  "_version": "1.42.0",
-  "sap.app": {
-    "id": "estadoCuenta.dulcor",
-    "type": "application",
-    "i18n": "i18n/i18n.properties",
-    "applicationVersion": {
-      "version": "0.0.1"
-    },
-    "title": "{{appTitle}}",
-    "description": "{{appDescription}}",
-    "resources": "resources.json",
-    "sourceTemplate": {
-      "id": "@sap/generator-fiori:basic",
-      "version": "1.7.4",
-      "toolsId": "4aa33962-2daf-405c-9735-7f5ba3b76647"
-    },
-    "dataSources": {
-      "mainService": {
-        "uri": "/sap/opu/odata/sap/Z_SB_USUARIOSPORTAL/",
-        "type": "OData",
-        "settings": {
-          "annotations": [],
-          "localUri": "localService/metadata.xml",
-          "odataVersion": "2.0"
+    "_version": "1.42.0",
+    "sap.app": {
+        "id": "estadoCuenta.dulcor",
+        "type": "application",
+        "i18n": "i18n/i18n.properties",
+        "applicationVersion": {
+            "version": "0.0.1"
+        },
+        "title": "{{appTitle}}",
+        "description": "{{appDescription}}",
+        "resources": "resources.json",
+        "sourceTemplate": {
+            "id": "@sap/generator-fiori:basic",
+            "version": "1.7.4",
+            "toolsId": "4aa33962-2daf-405c-9735-7f5ba3b76647"
+        },
+        "dataSources": {
+            "mainService": {
+                "uri": "/sap/opu/odata/sap/Z_SB_USUARIOSPORTAL/",
+                "type": "OData",
+                "settings": {
+                    "annotations": [
+                        "mainService_Annotation"
+                    ],
+                    "localUri": "localService/metadata.xml",
+                    "odataVersion": "2.0"
+                }
+            },
+            "estadoService": {
+                "uri": "/sap/opu/odata/sap/Z_FI0010_ESTADO_CUENTA_SRV/",
+                "type": "OData",
+                "settings": {
+                    "annotations": [],
+                    "localUri": "localService/metadata.xml",
+                    "odataVersion": "2.0"
+                }
+            },
+            "mainService_Annotation": {
+                "uri": "/sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Annotations(TechnicalName='Z_SB_USUARIOSPORTAL_VAN',Version='0001')/$value/",
+                "type": "ODataAnnotation",
+                "settings": {
+                    "localUri": "localService/mainService_Annotation.xml"
+                }
+            }
         }
-      },
-      "estadoService": {
-        "uri": "/sap/opu/odata/sap/Z_FI0010_ESTADO_CUENTA_SRV/",
-        "type": "OData",
-        "settings": {
-          "annotations": [],
-          "localUri": "localService/metadata.xml",
-          "odataVersion": "2.0"
+    },
+    "sap.ui": {
+        "technology": "UI5",
+        "icons": {
+            "icon": "",
+            "favIcon": "",
+            "phone": "",
+            "phone@2": "",
+            "tablet": "",
+            "tablet@2": ""
+        },
+        "deviceTypes": {
+            "desktop": true,
+            "tablet": true,
+            "phone": true
         }
-      }
+    },
+    "sap.ui5": {
+        "flexEnabled": false,
+        "dependencies": {
+            "minUI5Version": "1.102.19",
+            "libs": {
+                "sap.m": {},
+                "sap.ui.core": {},
+                "sap.f": {},
+                "sap.suite.ui.generic.template": {},
+                "sap.ui.comp": {},
+                "sap.ui.generic.app": {},
+                "sap.ui.table": {},
+                "sap.ushell": {}
+            }
+        },
+        "contentDensities": {
+            "compact": true,
+            "cozy": true
+        },
+        "models": {
+            "i18n": {
+                "type": "sap.ui.model.resource.ResourceModel",
+                "settings": {
+                    "bundleName": "estadoCuenta.dulcor.i18n.i18n"
+                }
+            },
+            "usuariosData": {
+                "dataSource": "mainService",
+                "preload": true,
+                "settings": {}
+            },
+            "estadoCuenta": {
+                "dataSource": "estadoService",
+                "preload": true,
+                "settings": {}
+            },
+            "DocumentosFinancieros": {
+                "type": "sap.ui.model.json.JSONModel"
+            },
+            "Saldo": {
+                "type": "sap.ui.model.json.JSONModel"
+            },
+            "Productos": {
+                "type": "sap.ui.model.json.JSONModel"
+            },
+            "Comprobantes": {
+                "type": "sap.ui.model.json.JSONModel"
+            },
+            "empresasCollection": {
+                "type": "sap.ui.model.json.JSONModel"
+            }
+        },
+        "resources": {
+            "css": [
+                {
+                    "uri": "css/style.css"
+                }
+            ]
+        },
+        "routing": {
+            "config": {
+                "routerClass": "sap.m.routing.Router",
+                "viewType": "XML",
+                "async": true,
+                "viewPath": "estadoCuenta.dulcor.view",
+                "controlAggregation": "pages",
+                "controlId": "app",
+                "clearControlAggregation": false
+            },
+            "routes": [
+                {
+                    "name": "RouteEstado",
+                    "pattern": ":?query:",
+                    "target": [
+                        "TargetEstado"
+                    ]
+                },
+                {
+                    "name": "RouteDocF",
+                    "pattern": "DocsFin/{operacion},{comprobante}",
+                    "target": [
+                        "TargetDocF"
+                    ]
+                },
+                {
+                    "name": "RouteComp",
+                    "pattern": "Comp/{tipo},{numero}",
+                    "target": [
+                        "TargetComp"
+                    ]
+                }
+            ],
+            "targets": {
+                "TargetEstado": {
+                    "viewType": "XML",
+                    "transition": "slide",
+                    "clearControlAggregation": false,
+                    "viewId": "estadoCuenta",
+                    "viewName": "estadoCuenta"
+                },
+                "TargetDocF": {
+                    "viewType": "XML",
+                    "transition": "slide",
+                    "clearControlAggregation": false,
+                    "viewId": "DocumentosFinancieros",
+                    "viewName": "DocumentosFinancieros"
+                },
+                "TargetComp": {
+                    "viewType": "XML",
+                    "transition": "slide",
+                    "clearControlAggregation": false,
+                    "viewId": "Comprobantes",
+                    "viewName": "Comprobantes"
+                }
+            }
+        },
+        "rootView": {
+            "viewName": "estadoCuenta.dulcor.view.App",
+            "type": "XML",
+            "async": true,
+            "id": "App"
+        }
     }
-  },
-  "sap.ui": {
-    "technology": "UI5",
-    "icons": {
-      "icon": "",
-      "favIcon": "",
-      "phone": "",
-      "phone@2": "",
-      "tablet": "",
-      "tablet@2": ""
-    },
-    "deviceTypes": {
-      "desktop": true,
-      "tablet": true,
-      "phone": true
-    }
-  },
-  "sap.ui5": {
-    "flexEnabled": false,
-    "dependencies": {
-      "minUI5Version": "1.102.19",
-      "libs": {
-        "sap.m": {},
-        "sap.ui.core": {},
-        "sap.f": {},
-        "sap.suite.ui.generic.template": {},
-        "sap.ui.comp": {},
-        "sap.ui.generic.app": {},
-        "sap.ui.table": {},
-        "sap.ushell": {}
-      }
-    },
-    "contentDensities": {
-      "compact": true,
-      "cozy": true
-    },
-    "models": {
-      "i18n": {
-        "type": "sap.ui.model.resource.ResourceModel",
-        "settings": {
-          "bundleName": "estadoCuenta.dulcor.i18n.i18n"
-        }
-      },
-      "usuariosData": {
-        "dataSource": "mainService",
-        "preload": true,
-        "settings": {}
-      },
-      "estadoCuenta": {
-        "dataSource": "estadoService",
-        "preload": true,
-        "settings": {}
-      },
-      "DocumentosFinancieros": {
-        "type": "sap.ui.model.json.JSONModel"
-      },
-      "Saldo": {
-        "type": "sap.ui.model.json.JSONModel"
-      },
-      "Productos": {
-        "type": "sap.ui.model.json.JSONModel"
-      },
-      "Comprobantes": {
-        "type": "sap.ui.model.json.JSONModel"
-      },
-      "empresasCollection":{
-        "type": "sap.ui.model.json.JSONModel"
-      }
-    },
-    "resources": {
-      "css": [
-        {
-          "uri": "css/style.css"
-        }
-      ]
-    },
-    "routing": {
-      "config": {
-        "routerClass": "sap.m.routing.Router",
-        "viewType": "XML",
-        "async": true,
-        "viewPath": "estadoCuenta.dulcor.view",
-        "controlAggregation": "pages",
-        "controlId": "app",
-        "clearControlAggregation": false
-      },
-      "routes": [
-        {
-          "name": "RouteEstado",
-          "pattern": ":?query:",
-          "target": [
-            "TargetEstado"
-          ]
-        },
-        {
-          "name": "RouteDocF",
-          "pattern": "DocsFin/{operacion},{comprobante}",
-          "target": [
-            "TargetDocF"
-          ]
-        },
-        {
-          "name": "RouteComp",
-          "pattern": "Comp/{tipo},{numero}",
-          "target": [
-            "TargetComp"
-          ]
-        }
-      ],
-      "targets": {
-        "TargetEstado": {
-          "viewType": "XML",
-          "transition": "slide",
-          "clearControlAggregation": false,
-          "viewId": "estadoCuenta",
-          "viewName": "estadoCuenta"
-        },
-        "TargetDocF": {
-          "viewType": "XML",
-          "transition": "slide",
-          "clearControlAggregation": false,
-          "viewId": "DocumentosFinancieros",
-          "viewName": "DocumentosFinancieros"
-        },
-        "TargetComp": {
-          "viewType": "XML",
-          "transition": "slide",
-          "clearControlAggregation": false,
-          "viewId": "Comprobantes",
-          "viewName": "Comprobantes"
-        }
-      }
-    },
-    "rootView": {
-      "viewName": "estadoCuenta.dulcor.view.App",
-      "type": "XML",
-      "async": true,
-      "id": "App"
-    }
-  }
 }

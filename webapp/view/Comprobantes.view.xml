@@ -1,5 +1,5 @@
-<mvc:View controllerName="estadoCuenta.dulcor.controller.Comprobantes" xmlns:mvc="sap.ui.core.mvc"
-    displayBlock="true" xmlns="sap.m"  xmlns:semantic="sap.f.semantic" xmlns:form="sap.ui.layout.form" xmlns:sform="sap.ui.comp.smartform" 
+<mvc:View controllerName="estadoCuenta.dulcor.controller.Comprobantes" xmlns:mvc="sap.ui.core.mvc" displayBlock="true"
+    xmlns="sap.m" xmlns:semantic="sap.f.semantic" xmlns:form="sap.ui.layout.form" xmlns:sform="sap.ui.comp.smartform"
     xmlns:l="sap.ui.layout" xmlns:sf="sap.ui.comp.smartfield">
     <Page id="page" title="{i18n>title}">
         <Panel class="sapUiResponsiveMargin" width="auto">
@@ -13,7 +13,12 @@
                     <HBox>
                         <VBox class="sapUiResponsiveMargin">
                             <Label text="Fecha" labelFor="fecha" />
-                            <Text id="fecha" text="{datosPrincipales>/fecha}" />
+                            <Text text="{ path:'datosPrincipales>/fecha',
+						                  type:'sap.ui.model.type.Date',
+						                  formatOptions: {  style: 'short',
+							                                strictParsing: true
+						                                }}" />
+                            <!-- <Text id="fecha" text="{datosPrincipales>/fecha}" /> -->
                         </VBox>
                         <VBox class="sapUiResponsiveMargin">
                             <Label text="Lugar de Entrega" labelFor="operacion" />
@@ -34,17 +39,27 @@
                     </FlexBox> -->
                 </semantic:headerContent>
                 <semantic:content>
-                    <Table id="productsTable" items="{productos>/productos}" headerText="Items"
-                        alternateRowColors="true">
+                    <Table id="productsTable" items="{comps>/results}" headerText="Lineas" alternateRowColors="true">
                         <columns>
-                            <Column id="operacionCol"><Text text="Producto" /></Column>
-                            <Column id="comprobanteCol" demandPopin="true"><Text text="Cantidad" /></Column>
+                            <Column id="operacionCol"><Text text="Producto" width="auto" /></Column>
+                            <Column id="comprobanteCol" demandPopin="true" width="25%">
+                                <Text text="Cantidad" />
+                            </Column>
                         </columns>
                         <items>
                             <ColumnListItem type="Inactive" vAlign="Middle" press="onPress">
                                 <cells>
-                                    <Text text="{productos>producto}" />
-                                    <Text text="{productos>cantidad}" />
+                                    <Text text="{comps>Material} - {comps>ShortText}" />
+
+                                    <ObjectNumber number="{
+								parts:[{path:'comps>ReqQty'},{path:'comps>SalesUnit'}],
+								type: 'sap.ui.model.type.Currency',
+								formatOptions: {showMeasure: false}
+							}" unit="{comps>SalesUnit}" />
+
+
+
+                                    <Text text="{comps>ReqQty}" />
                                 </cells>
                             </ColumnListItem>
                         </items>
@@ -53,27 +68,66 @@
             </semantic:SemanticPage>
         </Panel>
         <Panel class="sapUiResponsiveMargin" width="auto" id="tablaPanel">
-            <Table id="productsTable2" items="{DocumentosFinancieros>/estados}" headerText="Documentos Asociados"
+            <Table id="productsTable2" items="{documentos>/results}" headerText="Documentos Asociados"
                 alternateRowColors="true">
                 <columns>
-                    <Column id="tipoCol"><Text text="Tipo" /></Column>
+                    <!-- <Column id="tipoCol"><Text text="Operacion" /></Column>
                     <Column id="numeroCol" demandPopin="true"><Text text="Numero" /></Column>
                     <Column id="fechaCol" demandPopin="true"><Text text="Fecha" /></Column>
                     <Column id="vencimientoCol" demandPopin="true"><Text text="Vencimiento" /></Column>
-                    <!-- <Column id="entregaCol" demandPopin="true"><Text text="Entrega" /></Column> -->
-                    <Column id="itemsCol" demandPopin="true"><Text text="Items" /></Column>
-                    <Column id="descripcionCol" demandPopin="true"><Text text="Descripcion" /></Column>
+                    <Column id="entregaCol" demandPopin="true"><Text text="Entrega" /></Column> 
+                    <Column id="itemsCol" demandPopin="true"><Text text="Importe" /></Column>
+                    <Column id="descripcionCol" demandPopin="true"><Text text="Descripcion" /></Column> -->
+
+                    <Column id="tipoCol" width="auto"><Text text="Tipo" /></Column>
+                    <Column id="numeroCol" demandPopin="true" width="15%"><Text text="Numero" /></Column>
+                    <Column id="fechaCol" demandPopin="true" width="12%"><Text text="Fecha" /></Column>
+                    <Column id="vencimientoCol" demandPopin="true" width="14%"><Text text="Vencimiento" /></Column>
+                    <Column id="entregaCol" demandPopin="true" width="12%"><Text text="Entrega" /></Column>
+                    <Column id="itemsCol" demandPopin="true" width="14%"><Text text="Cant. Items" /></Column>
                 </columns>
                 <items>
                     <ColumnListItem type="Inactive" vAlign="Middle">
                         <cells>
-                            <Text text="{DocumentosFinancieros>operacion}" />
-                            <Text text="{DocumentosFinancieros>comprobante}" />
-                            <Text text="{DocumentosFinancieros>fecha}" />
-                            <Text text="{DocumentosFinancieros>vencimiento}" />
-                            <!-- <Text text="{comprobantes>entrega}" /> -->
-                            <Text text="{DocumentosFinancieros>items}" />
-                            <Text text="{DocumentosFinancieros>descripcion}" />
+                            <!-- <Text text="{DocumentosFinancieros>DocTypeText}" />
+
+                            <Text text="{DocumentosFinancieros>RefDocNo}" />
+                            <Text text="{ path:'DocumentosFinancieros>PstngDate',
+						                  type:'sap.ui.model.type.Date',
+						                  formatOptions: {  style: 'short',
+							                                strictParsing: true
+						                                }}" />
+                            <Text text="{ path:'DocumentosFinancieros>BlineDate',
+						                  type:'sap.ui.model.type.Date',
+						                  formatOptions: {  style: 'short',
+							                                strictParsing: true
+						                                }}" />
+                            <Text text="{DocumentosFinancieros>BlineDate}" /> 
+
+                            <ObjectNumber number="{
+								parts:[{path:'DocumentosFinancieros>Amount'},{path:'DocumentosFinancieros>Currency'}],
+								type: 'sap.ui.model.type.Currency',
+								formatOptions: {showMeasure: false}
+							}" unit="{DocumentosFinancieros>Currency}" /> -->
+
+                            <Text text="{documentos>VbtypText}" />
+                            <Text text="{documentos>Vbeln}" />
+                            <Text text="{ path:'documentos>Erdat',
+						                  type:'sap.ui.model.type.Date',
+						                  formatOptions: {  style: 'short',
+							                                strictParsing: true
+						                                }}" />
+                            <Text text="{ path:'documentos>Aedat',
+						                  type:'sap.ui.model.type.Date',
+						                  formatOptions: {  style: 'short',
+							                                strictParsing: true
+						                                }}" />
+                            <Text text="{ path:'documentos>Aedat',
+						                  type:'sap.ui.model.type.Date',
+						                  formatOptions: {  style: 'short',
+							                                strictParsing: true
+						                                }}" />
+                            <Text text="{documentos>CantItems}" />
                         </cells>
                     </ColumnListItem>
                 </items>

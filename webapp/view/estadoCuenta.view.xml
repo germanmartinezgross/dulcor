@@ -3,25 +3,27 @@
     xmlns:core="sap.ui.core">
     <Page id="page" title="{i18n>title}">
         <Panel class="sapUiResponsiveMargin" width="auto">
+        
             <form:SimpleForm columnsM="2" columnsL="3" columnsXL="6" layout="ColumnLayout">
                 <Label text="Cliente" />
                 <Input id="clientName" value="{PortalModel>/clientName}" showValueHelp="true" valueHelpOnly="true"
                     valueHelpRequest="onValueHelpRequest" enabled="{PortalModel>/clientEnabled}" />
+
+                <Label text="Empresa" />
+                <ComboBox id="idCBoxEmpresa" selectedKey="{ToolsModel>/sKeyEmpresaDist}"
+                    placeholder="Seleccionar Empresa" items="{
+							path: 'EmpresaModel>/results',
+							sorter: { path: 'EmpresaModel>SalesOrganization' }
+						}">
+                    <core:Item
+                        key="{EmpresaModel>SalesOrganization}-{EmpresaModel>DistributionChanel}-{EmpresaModel>PriceList}"
+                        text="{EmpresaModel>SalesOrganization} - {EmpresaModel>SalesOrganizationName}" />
+                </ComboBox>
             </form:SimpleForm>
 
             <form:SimpleForm columnsM="2" columnsL="3" columnsXL="6" layout="ColumnLayout">
                 <form:content>
-                    <Label text="Empresa" />
-                    <ComboBox id="idCBoxEmpresa" 
-                        selectedKey="{ToolsModel>/sKeyEmpresaDist}" placeholder="Seleccionar Empresa"
-                        items="{
-							path: 'EmpresaModel>/results',
-							sorter: { path: 'EmpresaModel>SalesOrganization' }
-						}">
-                        <core:Item
-                            key="{EmpresaModel>SalesOrganization}-{EmpresaModel>DistributionChanel}-{EmpresaModel>PriceList}"
-                            text="{EmpresaModel>SalesOrganization} - {EmpresaModel>SalesOrganizationName}" />
-                    </ComboBox>
+
                     <Label text="Fecha Desde" />
                     <DatePicker id="DP1" placeholder="Fecha" change="handleChange" class="sapUiSmallMarginBottom"
                         width="auto" />
@@ -30,12 +32,18 @@
                     <DatePicker id="DP2" placeholder="Fecha" change="handleChange" class="sapUiSmallMarginBottom"
                         width="auto" />
 
+                    
+                </form:content>
+            </form:SimpleForm>
+            <form:SimpleForm >
+                <form:content>
                     <Button text="Buscar" press=".onSubmit" />
                 </form:content>
             </form:SimpleForm>
         </Panel>
         <Panel class="sapUiResponsiveMargin" width="auto" id="tablaPanel" visible="false">
-            <Table id="productsTable" items="{DocumentosFinancieros>/results}" headerText="Estado de Cuenta"
+            <Table id="productsTable" contextualWidth="Auto"
+								popinLayout="GridSmall" items="{DocumentosFinancieros>/results}" headerText="Estado de Cuenta"
                 alternateRowColors="true">
                 <headerToolbar>
                     <OverflowToolbar id="idCrumbToolbar">
@@ -46,49 +54,43 @@
                 </headerToolbar>
                 <infoToolbar>
                     <OverflowToolbar>
-                    <Text text="Saldo: "></Text>
-                    <ObjectNumber
-							number="{
+                        <Text text="Saldo: "></Text>
+                        <ObjectNumber number="{
 								parts:[{path:'Saldo>/TotalBal'},{path:'Saldo>/Currency'}],
 								type: 'sap.ui.model.type.Currency',
 								formatOptions: {showMeasure: false}
-							}"
-							unit="{Saldo>/Currency}" />
+							}" unit="{Saldo>/Currency}" />
                     </OverflowToolbar>
                 </infoToolbar>
                 <columns>
-                    <Column id="operacionCol"><Text text="Operacion" /></Column>
-                    <Column id="comprobanteCol" demandPopin="true"><Text text="Nro. Comprobante" /></Column>
-                    <Column id="fechaCol" demandPopin="true"><Text text="Fecha" /></Column>
-                    <Column id="vencimientoCol" demandPopin="true"><Text text="Vencimiento" /></Column>
-                    <Column id="importeCol" demandPopin="true"><Text text="Importe" /></Column>
+                    <Column id="operacionCol" demandPopin="true" width="auto"><Text text="Operacion" /></Column>
+                    <Column id="comprobanteCol" demandPopin="true" width="20%"><Text text="Nro. Comprobante" /></Column>
+                    <Column id="fechaCol"  minScreenWidth="tablet" demandPopin="false" width="15%"><Text text="Fecha" /></Column>
+                    <Column id="vencimientoCol" minScreenWidth="tablet" demandPopin="false" width="15%"> <Text text="Vencimiento" /></Column>
+                    <Column id="importeCol" demandPopin="true" width="20%"><Text text="Importe" /></Column>
                 </columns>
                 <items>
                     <ColumnListItem type="Navigation" vAlign="Middle" press="onPress">
                         <cells>
-                            <Text text="{DocumentosFinancieros>DocType}" />
-                            <Text text="{DocumentosFinancieros>DocNo}" />
+                            <Text text="{DocumentosFinancieros>DocTypeText}" />
+                            <Text text="{DocumentosFinancieros>RefDocNo}" />
                             <Text text="{ path:'DocumentosFinancieros>PstngDate',
 						                  type:'sap.ui.model.type.Date',
 						                  formatOptions: {  style: 'short',
 							                                strictParsing: true
-						                                }}" 
-                            />
+						                                }}" />
                             <Text text="{ path:'DocumentosFinancieros>BlineDate',
 						                  type:'sap.ui.model.type.Date',
 						                  formatOptions: {  style: 'short',
 							                                strictParsing: true
-						                                }}" 
-                            />
+						                                }}" />
                             <!-- <Text text="{DocumentosFinancieros>BlineDate}" /> -->
 
-                            <ObjectNumber
-							number="{
+                            <ObjectNumber number="{
 								parts:[{path:'DocumentosFinancieros>Amount'},{path:'DocumentosFinancieros>Currency'}],
 								type: 'sap.ui.model.type.Currency',
 								formatOptions: {showMeasure: false}
-							}"
-							unit="{DocumentosFinancieros>Currency}" />
+							}" unit="{DocumentosFinancieros>Currency}" />
 
                             <!-- <Text text="{DocumentosFinancieros>Currency} {DocumentosFinancieros>Amount}" /> -->
                         </cells>

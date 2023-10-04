@@ -6,7 +6,7 @@ sap.ui.define([
         "sap/ui/core/Fragment",
         "sap/m/MessageBox",
         "sap/ui/core/BusyIndicator",
-        
+
     ],
     /**
      * @param {typeof sap.ui.core.mvc.Controller} Controller
@@ -46,50 +46,13 @@ sap.ui.define([
 
                 //LLAMAR CustomerOganizationType
                 let oEmpresa = await this.readServiceEmp(oPortal.getProperty("/to_Customer/Customer"));
-                
+
                 this.getOwnerComponent().setModel(new JSONModel(oEmpresa), "EmpresaModel");
 
                 // oEmpresa = this.getOwnerComponent().getModel("EmpresaModel").getData().results.sort((a,b) => (a.SalesOrganization > b.SalesOrganization) ? 1 : ((b.SalesOrganization > a.SalesOrganization) ? -1 : 0))
 
                 // this.getOwnerComponent().setModel(new JSONModel(oEmpresa), "EmpresaModel");
 
-                var oModel = new JSONModel
-                var oModel2 = new JSONModel
-                var oModel3 = new JSONModel
-
-                oModel2.setData({
-                    "productos": [{
-                        "producto": "TX-1A-B-350-1120-0000DES-FSC",
-                        "cantidad": "11.081",
-                    }]
-                })
-
-                oModel3.setData({
-                    "comprobantes": [{
-                            "tipo": "Pedido",
-                            "numero": "0000340324",
-                            "fecha": "28/07/2023",
-                            "vencimiento": "",
-                            "entrega": "01/08/2023",
-                            "items": "1",
-                            "descripcion": "TX-1A-B-350-1120-0000DES-FSC",
-                        },
-                        {
-                            "tipo": "Remito",
-                            "numero": "0032R00203911",
-                            "fecha": "31/07/2023",
-                            "vencimiento": "",
-                            "entrega": "",
-                            "items": "7",
-                            "descripcion": "TX-1A-B-350-1120-0000DES-FSC",
-                        }
-                    ]
-                })
-
-                this.getOwnerComponent().setModel(oModel, "DocumentosFinancieros")
-                this.getOwnerComponent().setModel(oModel2, "Productos")
-                this.getOwnerComponent().setModel(oModel3, "Comprobantes")
-                
                 // this.getView().getModel().attachRequestCompleted(function () {
                 sap.ui.core.BusyIndicator.hide()
                 // });
@@ -246,22 +209,101 @@ sap.ui.define([
 
             },
             onPress: async function (oEvent) {
-
+                sap.ui.core.BusyIndicator.show(2)
+                
                 var oBindingContext = oEvent.getSource().getBindingContext("DocumentosFinancieros");
                 var operacion = oBindingContext.getProperty("DocType");
                 var comprobante = oBindingContext.getProperty("DocNo");
-                var fecha = oBindingContext.getProperty("PstngDate");
-                var vencimiento = oBindingContext.getProperty("BlineDate");
-                var importe = oBindingContext.getProperty("Amount");
-                var moneda = oBindingContext.getProperty("Currency");
+                var vbeln = oBindingContext.getProperty("BillDoc");
+                var oData = await this._getDatosDocFin(comprobante)
+                this.getOwnerComponent().setModel(new JSONModel(oData), "productos");
+                oData = await this._getCompXDoc(vbeln);
+                this.getOwnerComponent().setModel(new JSONModel(oData), "comprobantes");
+                sap.ui.core.BusyIndicator.hide()
                 this.getOwnerComponent().getRouter().navTo("RouteDocF", {
                     operacion: operacion,
                     comprobante: comprobante
-                    // fecha: fecha,
-                    // vencimiento: vencimiento,
-                    // importe: importe,
-                    // moneda: moneda
                 });
+            },
+
+            _getDatosDocFin: function (belnr) {
+                try {
+                    var la_filters = new Array();
+                    var lv_pickedDateFilter = new sap.ui.model.Filter({
+                        path: "Belnr",
+                        operator: sap.ui.model.FilterOperator.EQ,
+                        value1: belnr
+                    });
+                    la_filters.push(lv_pickedDateFilter);
+
+                    return new Promise((res, rej) => {
+                        this.getOwnerComponent().getModel("estadoCuenta").read("/BillingDocItemsSet", {
+                            filters: la_filters,
+                            // urlParameters: {
+                            //     "$expand": "to_SalesOrganization"
+                            // },
+                            success: res,
+                            error: rej
+                        });
+                    });
+                } catch (error) {
+                    if (error.responseText !== undefined) {
+
+                        var err = JSON.parse(err.responseText).error.message.value;
+                        sap.m.MessageBox.error(err);
+                    } else {
+
+                        sap.m.MessageToast.show("Error al consultar oData");
+                    }
+                }
+                if (error.responseText !== undefined) {
+
+                    var err = JSON.parse(err.responseText).error.message.value;
+                    sap.m.MessageBox.error(err);
+                } else {
+
+                    sap.m.MessageToast.show("Error al consultar oData");
+                }
+            },
+
+            _getCompXDoc: function (vbeln) {
+                try {
+                    var la_filters = new Array();
+                    var lv_pickedDateFilter = new sap.ui.model.Filter({
+                        path: "Vbeln",
+                        operator: sap.ui.model.FilterOperator.EQ,
+                        value1: vbeln
+                    });
+                    la_filters.push(lv_pickedDateFilter);
+
+                    return new Promise((res, rej) => {
+                        this.getOwnerComponent().getModel("estadoCuenta").read("/RelatedDocsSet", {
+                            filters: la_filters,
+                            // urlParameters: {
+                            //     "$expand": "to_SalesOrganization"
+                            // },
+                            success: res,
+                            error: rej
+                        });
+                    });
+                } catch (error) {
+                    if (error.responseText !== undefined) {
+
+                        var err = JSON.parse(err.responseText).error.message.value;
+                        sap.m.MessageBox.error(err);
+                    } else {
+
+                        sap.m.MessageToast.show("Error al consultar oData");
+                    }
+                }
+                if (error.responseText !== undefined) {
+
+                    var err = JSON.parse(err.responseText).error.message.value;
+                    sap.m.MessageBox.error(err);
+                } else {
+
+                    sap.m.MessageToast.show("Error al consultar oData");
+                }
             },
 
             verificarIngresos: function () {
@@ -281,7 +323,7 @@ sap.ui.define([
                     return true
                 }
                 return false;
-                
+
             },
 
             readServiceEstadoCuenta: function () {
