@@ -3,7 +3,7 @@
     xmlns:core="sap.ui.core">
     <Page id="page" title="{i18n>title}">
         <Panel class="sapUiResponsiveMargin" width="auto">
-        
+
             <form:SimpleForm columnsM="2" columnsL="3" columnsXL="6" layout="ColumnLayout">
                 <Label text="Cliente" />
                 <Input id="clientName" value="{PortalModel>/clientName}" showValueHelp="true" valueHelpOnly="true"
@@ -32,19 +32,42 @@
                     <DatePicker id="DP2" placeholder="Fecha" change="handleChange" class="sapUiSmallMarginBottom"
                         width="auto" />
 
-                    
+
                 </form:content>
             </form:SimpleForm>
-            <form:SimpleForm >
+            <form:SimpleForm>
                 <form:content>
+                    <CheckBox text="Traer tambien partidas compensadas" id="historial" />
+                    <!-- <Label text="Empresa" />
+                <ComboBox id="idCBoxEmpresa" selectedKey="{ToolsModel>/sKeyEmpresaDist}"
+                    placeholder="Seleccionar Empresa" items="{
+							path: 'EmpresaModel>/results',
+							sorter: { path: 'EmpresaModel>SalesOrganization' }
+						}">
+                    <core:Item
+                        key="{EmpresaModel>SalesOrganization}-{EmpresaModel>DistributionChanel}-{EmpresaModel>PriceList}"
+                        text="{EmpresaModel>SalesOrganization} - {EmpresaModel>SalesOrganizationName}" />
+                </ComboBox> -->
+
+
+
+                    <!-- <Label text= "Estado"></Label>
+                    <ComboBox id="idHistorial" selectedKey="{ToolsModel>/sKeyEmpresaDist}"
+                    placeholder="Estado" items="{
+							path: 'TipoDato>',
+						}">
+                    <core:Item
+                        key="{TipoDato>estado}"
+                        text="{TipoDato>estado}" />
+                </ComboBox> -->
+
                     <Button text="Buscar" press=".onSubmit" />
                 </form:content>
             </form:SimpleForm>
         </Panel>
         <Panel class="sapUiResponsiveMargin" width="auto" id="tablaPanel" visible="false">
-            <Table id="productsTable" contextualWidth="Auto"
-								popinLayout="GridSmall" items="{DocumentosFinancieros>/results}" headerText="Estado de Cuenta"
-                alternateRowColors="true">
+            <Table id="productsTable" contextualWidth="Auto" popinLayout="GridSmall"
+                items="{DocumentosFinancieros>/results}" headerText="Estado de Cuenta" alternateRowColors="true">
                 <headerToolbar>
                     <OverflowToolbar id="idCrumbToolbar">
                         <VBox>
@@ -63,11 +86,11 @@
                     </OverflowToolbar>
                 </infoToolbar>
                 <columns>
-                    <Column id="operacionCol" demandPopin="true" width="auto"><Text text="Operacion" /></Column>
-                    <Column id="comprobanteCol" demandPopin="true" width="20%"><Text text="Nro. Comprobante" /></Column>
-                    <Column id="fechaCol"  minScreenWidth="tablet" demandPopin="false" width="15%"><Text text="Fecha" /></Column>
+                    <Column id="operacionCol"                           demandPopin="true" width="auto"><Text text="Operacion" /></Column>
+                    <Column id="comprobanteCol" minScreenWidth="tablet" demandPopin="true" width="20%"><Text text="Nro. Comprobante" /></Column>
+                    <Column id="fechaCol"       minScreenWidth="tablet" demandPopin="false" width="15%"><Text text="Fecha" /></Column>
                     <Column id="vencimientoCol" minScreenWidth="tablet" demandPopin="false" width="15%"> <Text text="Vencimiento" /></Column>
-                    <Column id="importeCol" demandPopin="true" width="20%"><Text text="Importe" /></Column>
+                    <Column id="importeCol"     minScreenWidth="tablet" demandPopin="true" width="20%" hAlign="End"><Text text="Importe" /></Column>
                 </columns>
                 <items>
                     <ColumnListItem type="Navigation" vAlign="Middle" press="onPress">
@@ -90,7 +113,10 @@
 								parts:[{path:'DocumentosFinancieros>Amount'},{path:'DocumentosFinancieros>Currency'}],
 								type: 'sap.ui.model.type.Currency',
 								formatOptions: {showMeasure: false}
-							}" unit="{DocumentosFinancieros>Currency}" />
+                                
+							}" unit="{DocumentosFinancieros>Currency}" 
+                            state="{= ${DocumentosFinancieros>Amount} > 0 ? 'Success' : 'Error' }"
+                            />
 
                             <!-- <Text text="{DocumentosFinancieros>Currency} {DocumentosFinancieros>Amount}" /> -->
                         </cells>

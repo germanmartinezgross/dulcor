@@ -49,11 +49,18 @@ sap.ui.define([
 
                 this.getOwnerComponent().setModel(new JSONModel(oEmpresa), "EmpresaModel");
 
-                // oEmpresa = this.getOwnerComponent().getModel("EmpresaModel").getData().results.sort((a,b) => (a.SalesOrganization > b.SalesOrganization) ? 1 : ((b.SalesOrganization > a.SalesOrganization) ? -1 : 0))
+                var oModel2 = new JSONModel
 
-                // this.getOwnerComponent().setModel(new JSONModel(oEmpresa), "EmpresaModel");
+                oModel2.setData({
+                    "estados": [{"estado": "Abiertas"},
+                                {"estado": "Historico"}
 
-                // this.getView().getModel().attachRequestCompleted(function () {
+                    ]
+                })
+
+                this.getOwnerComponent().setModel(oModel2, "estados");
+
+
                 sap.ui.core.BusyIndicator.hide()
                 // });
             },
@@ -193,12 +200,19 @@ sap.ui.define([
             },
 
             onSubmit: async function () {
-                sap.ui.core.BusyIndicator.show(2)
+                sap.ui.core.BusyIndicator.show()
                 var error = this.verificarIngresos();
                 if (error) {
-
+                    MessageBox.error("Ingrese todos los filtros");
+                    sap.ui.core.BusyIndicator.hide()
                 } else {
-                    var aData = await this.readServiceEstadoCuenta();
+                    var historial = this.byId("historial").getSelected();
+                    if (historial) {
+                        var aData = await this.readServiceEstadoCuentaHistorico();
+                    } else {
+                        aData = await this.readServiceEstadoCuenta()
+                    }
+
                     this.getView().getModel("DocumentosFinancieros").setData(aData)
                     aData = await this.readServiceSaldo();
                     this.getView().getModel("Saldo").setData(aData.results[0].ActualBalance)
@@ -209,16 +223,17 @@ sap.ui.define([
 
             },
             onPress: async function (oEvent) {
-                sap.ui.core.BusyIndicator.show(2)
-                
+                sap.ui.core.BusyIndicator.show()
+
                 var oBindingContext = oEvent.getSource().getBindingContext("DocumentosFinancieros");
                 var operacion = oBindingContext.getProperty("DocType");
                 var comprobante = oBindingContext.getProperty("DocNo");
                 var vbeln = oBindingContext.getProperty("BillDoc");
+
                 var oData = await this._getDatosDocFin(comprobante)
                 this.getOwnerComponent().setModel(new JSONModel(oData), "productos");
-                oData = await this._getCompXDoc(vbeln);
-                this.getOwnerComponent().setModel(new JSONModel(oData), "comprobantes");
+                // oData = await this._getCompXDoc(vbeln);
+                // this.getOwnerComponent().setModel(new JSONModel(oData), "comprobantes");
                 sap.ui.core.BusyIndicator.hide()
                 this.getOwnerComponent().getRouter().navTo("RouteDocF", {
                     operacion: operacion,
@@ -326,11 +341,14 @@ sap.ui.define([
 
             },
 
-            readServiceEstadoCuenta: function () {
+            readServiceEstadoCuentaHistorico: function () {
                 var customer = this.byId("clientName").getValue().split(" - ")[0]
                 var companyCode = this.byId("idCBoxEmpresa").getValue().split(" - ")[0]
-                var fecha1 = this.byId("DP1").getValue()
-                var fecha2 = this.byId("DP2").getValue()
+                // var fecha1 = this.byId("DP1").getValue()
+                // var fecha2 = this.byId("DP2").getValue()
+                var s = sap.ui.core.format.DateFormat.getInstance({pattern: "MM/dd/yyyy"})
+                var fecha2 = s.parse(s.format(this.byId("DP2").getDateValue()));
+                var fecha1 = s.parse(s.format(this.byId("DP1").getDateValue()));
                 try {
                     var la_filters = new Array();
                     var lv_pickedDateFilter = new sap.ui.model.Filter({
@@ -369,6 +387,64 @@ sap.ui.define([
                             // urlParameters: {
                             //     "$expand": "to_SalesOrganization"
                             // },
+                            success: res,
+                            error: rej
+                        });
+                    });
+                } catch (error) {
+                    if (error.responseText !== undefined) {
+
+                        var err = JSON.parse(err.responseText).error.message.value;
+                        sap.m.MessageBox.error(err);
+                    } else {
+
+                        sap.m.MessageToast.show("Error al consultar oData");
+                    }
+                }
+                if (error.responseText !== undefined) {
+
+                    var err = JSON.parse(err.responseText).error.message.value;
+                    sap.m.MessageBox.error(err);
+                } else {
+
+                    sap.m.MessageToast.show("Error al consultar oData");
+                }
+            },
+
+            readServiceEstadoCuenta: function () {
+                var customer = this.byId("clientName").getValue().split(" - ")[0]
+                var companyCode = this.byId("idCBoxEmpresa").getValue().split(" - ")[0]
+                // var fecha1 = this.byId("DP1").getValue()
+                // var fecha2 = this.byId("DP2").getValue()
+                var s = sap.ui.core.format.DateFormat.getInstance({pattern: "MM/dd/yyyy"})
+               var fecha2 = s.parse(s.format(this.byId("DP2").getDateValue()));
+                try {
+                    var la_filters = new Array();
+                    var lv_pickedDateFilter = new sap.ui.model.Filter({
+                        path: "Customer",
+                        operator: sap.ui.model.FilterOperator.EQ,
+                        value1: customer
+                    });
+                    la_filters.push(lv_pickedDateFilter);
+
+                    lv_pickedDateFilter = new sap.ui.model.Filter({
+                        path: "Companycode",
+                        operator: sap.ui.model.FilterOperator.EQ,
+                        value1: companyCode
+                    });
+                    la_filters.push(lv_pickedDateFilter);
+
+                    // var fecha = `datetime'${anio}-${fechas[0]}-${fechas[1]}T00:00:0'`
+                    lv_pickedDateFilter = new sap.ui.model.Filter({
+                        path: "Keydate",
+                        operator: sap.ui.model.FilterOperator.EQ,
+                        value1: fecha2
+                    });
+                    la_filters.push(lv_pickedDateFilter);
+
+                    return new Promise((res, rej) => {
+                        this.getOwnerComponent().getModel("estadoCuenta").read("/GetOpenItemsSet", {
+                            filters: la_filters,
                             success: res,
                             error: rej
                         });

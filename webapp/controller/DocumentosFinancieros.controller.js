@@ -1,11 +1,12 @@
 sap.ui.define([
     "sap/ui/core/mvc/Controller",
+    "sap/m/PDFViewer",
     'sap/ui/model/json/JSONModel'
   ],
   /**
    * @param {typeof sap.ui.core.mvc.Controller} Controller
    */
-  function (Controller, JSONModel) {
+  function (Controller, PDFViewer, JSONModel) {
     "use strict";
     var comprobante
     var operacion
@@ -18,6 +19,7 @@ sap.ui.define([
       },
 
       _onRouteMatched: async function (oEvent) {
+        this._pdfViewer = new PDFViewer();
         var oArgs, oView, oData
 
         var that = this;
@@ -36,8 +38,10 @@ sap.ui.define([
             fecha: doc.PstngDate,
             vencimiento: doc.BlineDate,
             importe: doc.Amount,
-            moneda: doc.Currency
-
+            moneda: doc.Currency,
+            customer: doc.Customer,
+            companyCode: doc.Companycode,
+            fiscYear: doc.FiscYear
           });
           this.getView().setModel(oViewModel, "datosPrincipales");
 
@@ -57,7 +61,7 @@ sap.ui.define([
 
       },
       onPress: async function (oEvent) {
-        sap.ui.core.BusyIndicator.show(2)
+        sap.ui.core.BusyIndicator.show()
         // var oBindingContext = oEvent.getSource().getBindingContext();
         var oBindingContext = oEvent.getSource().getBindingContext("comprobantes");
         var tipo = oBindingContext.getProperty("VbtypText");
@@ -79,7 +83,18 @@ sap.ui.define([
         });
         // this.getOwnerComponent().getRouter().navTo("RouteDocF");
       },
+      onPdf: async function (oEvent){
+        var datos = this.getView().getModel("datosPrincipales").getData();
+        var titulo = datos.operacion + ' - ' + datos.comprobante
+        var ebeln = datos.comprobanteSAP;
+        var vkorg = datos.companyCode;
+        var fiscYear = datos.fiscYear;
+            this._pdfViewer.setSource("/sap/opu/odata/sap/Z_FI0010_ESTADO_CUENTA_SRV/FacturaPDFSet(Ebeln='" + ebeln + "',CompanyCode='" + vkorg + "',FiscYear='" + fiscYear + "')/$value");
+			        this._pdfViewer.setTitle(titulo);
+			        this._pdfViewer.open();
+      
 
+      },
       _getDatosDocFin: function (vbeln, vkorg, kunnr) {
         try {
           var la_filters = new Array();

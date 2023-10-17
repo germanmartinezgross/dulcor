@@ -44,7 +44,7 @@
 
                     </HBox>
                     <FlexBox alignItems="Center" justifyContent="End">
-                        <Button icon="sap-icon://pdf-attachment" text="Exportar Factura en PDF" />
+                        <Button icon="sap-icon://pdf-attachment" text="Exportar Factura en PDF" press="onPdf" />
                     </FlexBox>
                 </semantic:headerContent>
                 <semantic:content>
@@ -52,7 +52,7 @@
                         alternateRowColors="true">
                         <columns>
                             <Column id="operacionCol"><Text text="Producto" width="auto" /></Column>
-                            <Column id="comprobanteCol" demandPopin="true" width="25%">
+                            <Column hAlign="End" id="comprobanteCol" demandPopin="true" width="25%">
                                 <Text text="Cantidad" />
                             </Column>
                         </columns>
@@ -73,7 +73,7 @@
                 </semantic:content>
             </semantic:SemanticPage>
         </Panel>
-        <Panel class="sapUiResponsiveMargin" width="auto" id="tablaPanel">
+        <!-- <Panel class="sapUiResponsiveMargin" width="auto" id="tablaPanel">
             <Table id="productsTable2" items="{comprobantes>/results}" headerText="Comprobantes Asociados"
                 alternateRowColors="true">
                 <columns>
@@ -83,7 +83,6 @@
                     <Column id="vencimientoCol" demandPopin="true" width="15%"><Text text="Vencimiento" /></Column>
                     <Column id="entregaCol" demandPopin="true" width="15%"><Text text="Entrega" /></Column>
                     <Column id="itemsCol" demandPopin="true" width="15%"><Text text="Cant. Items" /></Column>
-                    <!-- <Column id="descripcionCol" demandPopin="true"><Text text="Descripcion" /></Column> -->
                 </columns>
                 <items>
                     <ColumnListItem type="Active" vAlign="Middle" press="onPress">
@@ -106,11 +105,10 @@
 							                                strictParsing: true
 						                                }}" />
                             <Text text="{comprobantes>CantItems}" />
-                            <!-- <Text text="{comprobantes>descripcion}" /> -->
                         </cells>
                     </ColumnListItem>
                 </items>
             </Table>
-        </Panel>
+        </Panel> -->
     </Page>
 </mvc:View>
